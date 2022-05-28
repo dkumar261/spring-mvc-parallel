@@ -1,0 +1,6 @@
+server:
+  port: 8001
+  
+app:
+  name: Hello World !!
+    
