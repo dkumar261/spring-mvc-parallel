@@ -3,6 +3,8 @@ package com.springpractice.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,12 +15,11 @@ import com.springpractice.model.EmployeeName;
 import com.springpractice.model.EmployeeNames;
 import com.springpractice.model.EmployeePhone;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 @RestController
 public class EmployeeDataController {
 
+	private static Logger log = LoggerFactory.getLogger(EmployeeDataController.class);
+	
 	@RequestMapping(value = "/address", method = RequestMethod.GET)
 	public EmployeeAddresses getAddresses() {
 		log.info("Employee addresses reached");
@@ -42,13 +43,6 @@ public class EmployeeDataController {
 		addressList.add(employeeAddress2);
 
 		employeeAddressesList.setEmployeeAddressList(addressList);
-
-		try {
-			Thread.sleep(60000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		return employeeAddressesList;
 	}
 
