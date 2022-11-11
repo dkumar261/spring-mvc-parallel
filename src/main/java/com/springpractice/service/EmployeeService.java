@@ -21,7 +21,7 @@ public class EmployeeService {
 	@Autowired
 	private RestTemplate restTemplate;
 
-	@Async("asyncExecutor")
+	//@Async("asyncExecutor")
 	public CompletableFuture<EmployeeNames> getEmployeeName() throws InterruptedException {
 		log.info("getEmployeeName starts");
 
@@ -32,28 +32,18 @@ public class EmployeeService {
 		log.info("employeeNameData completed");
 		return CompletableFuture.completedFuture(employeeNameData);
 	}
-
+	
 	@Async("asyncExecutor")
 	public CompletableFuture<EmployeeAddresses> getEmployeeAddress() throws InterruptedException {
 		log.info("getEmployeeAddress starts");
-
 		EmployeeAddresses employeeAddressData = restTemplate.getForObject("http://localhost:8080/address",
 				EmployeeAddresses.class);
-
-		log.info("employeeAddressData, {}", employeeAddressData);
-		log.info("employeeAddressData completed");
 		return CompletableFuture.completedFuture(employeeAddressData);
 	}
-
 	@Async("asyncExecutor")
 	public CompletableFuture<EmployeePhone> getEmployeePhone() throws InterruptedException {
 		log.info("getEmployeePhone starts");
-
 		EmployeePhone employeePhoneData = restTemplate.getForObject("http://localhost:8080/phones", EmployeePhone.class);
-
-		log.info("employeePhoneData, {}", employeePhoneData);
-		log.info("employeePhoneData completed");
 		return CompletableFuture.completedFuture(employeePhoneData);
 	}
-
 }

@@ -21,7 +21,7 @@ public class EmployeeDataController {
 	private static Logger log = LoggerFactory.getLogger(EmployeeDataController.class);
 	
 	@RequestMapping(value = "/address", method = RequestMethod.GET)
-	public EmployeeAddresses getAddresses() {
+	public EmployeeAddresses getAddresses() throws InterruptedException {
 		log.info("Employee addresses reached");
 
 		EmployeeAddresses employeeAddressesList = new EmployeeAddresses();
@@ -43,11 +43,12 @@ public class EmployeeDataController {
 		addressList.add(employeeAddress2);
 
 		employeeAddressesList.setEmployeeAddressList(addressList);
+		Thread.sleep(9000);
 		return employeeAddressesList;
 	}
 
 	@RequestMapping(value = "/phones", method = RequestMethod.GET)
-	public EmployeePhone getPhoneNumbers() {
+	public EmployeePhone getPhoneNumbers() throws InterruptedException {
 		log.info("Employee Phones reached ");
 
 		EmployeePhone employeePhone = new EmployeePhone();
@@ -57,7 +58,7 @@ public class EmployeeDataController {
 		phoneNumberList.add("200000");
 
 		employeePhone.setPhoneNumbers(phoneNumberList);
-
+		Thread.sleep(9000);
 		return employeePhone;
 	}
 

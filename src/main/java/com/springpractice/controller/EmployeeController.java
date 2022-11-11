@@ -2,6 +2,8 @@ package com.springpractice.controller;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.springpractice.model.EmployeeAddresses;
 import com.springpractice.model.EmployeePhone;
+import com.springpractice.model.EmployeeResponse;
 import com.springpractice.service.EmployeeService;
 
 @RestController
@@ -23,7 +26,7 @@ public class EmployeeController {
 	private EmployeeService service;
 
 	@RequestMapping(value = "/emp", method = RequestMethod.GET)
-	public void getEmployee() throws InterruptedException, ExecutionException {
+	public EmployeeResponse getEmployee() throws InterruptedException, ExecutionException {
 
 		log.info("employeeAddress Start");
 		CompletableFuture<EmployeeAddresses> employeeAddress = service.getEmployeeAddress();
@@ -33,10 +36,21 @@ public class EmployeeController {
 //		CompletableFuture<EmployeeNames> employeeName = service.getEmployeeName();
 
 		// Wait until they are all done
-		CompletableFuture.allOf(employeeAddress, employeePhone).join();
+		try {
+			CompletableFuture.allOf(employeeAddress, employeePhone).get(10, TimeUnit.SECONDS);
+		}
 
-		log.info("EmployeeAddress--> " + employeeAddress.get());
-		//log.info("EmployeeName--> " + employeeName.get());
-		log.info("EmployeePhone--> " + employeePhone.get());
+		catch (TimeoutException e) {
+			System.out.println("Timeout exception is occured !!!!!");
+		}
+
+		EmployeeAddresses employeeAddresses = employeeAddress.get();
+
+		EmployeePhone employeePhoneRes = employeePhone.get();
+
+		EmployeeResponse employeeResponse = new EmployeeResponse();
+		employeeResponse.setEmployeeAddresses(employeeAddresses);
+
+		return employeeResponse;
 	}
 }
