@@ -1,12 +1,11 @@
 package com.springpractice.controller;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,10 +16,12 @@ import com.springpractice.model.EmployeePhone;
 import com.springpractice.model.EmployeeResponse;
 import com.springpractice.service.EmployeeService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestController
 public class EmployeeController {
 
-	private static Logger log = LoggerFactory.getLogger(EmployeeController.class);
 
 	@Autowired
 	private EmployeeService service;
@@ -32,24 +33,29 @@ public class EmployeeController {
 		CompletableFuture<EmployeeAddresses> employeeAddress = service.getEmployeeAddress();
 		log.info("employeePhone Start");
 		CompletableFuture<EmployeePhone> employeePhone = service.getEmployeePhone();
+		
 //		log.info("employeeName Start");
 //		CompletableFuture<EmployeeNames> employeeName = service.getEmployeeName();
 
+		System.out.println(employeeAddress.isDone());
 		// Wait until they are all done
 		try {
-			CompletableFuture.allOf(employeeAddress, employeePhone).get(10, TimeUnit.SECONDS);
+			List<CompletableFuture> futuresList = List.of(employeeAddress,employeePhone);
+			CompletableFuture.allOf(futuresList.toArray(new CompletableFuture[0])).get(10, TimeUnit.SECONDS);
 		}
 
 		catch (TimeoutException e) {
 			System.out.println("Timeout exception is occured !!!!!");
 		}
+		System.out.println(employeeAddress.isDone());
 
 		EmployeeAddresses employeeAddresses = employeeAddress.get();
-
+//
 		EmployeePhone employeePhoneRes = employeePhone.get();
-
+//
 		EmployeeResponse employeeResponse = new EmployeeResponse();
 		employeeResponse.setEmployeeAddresses(employeeAddresses);
+		employeeResponse.setEmployeePhone(employeePhoneRes);
 
 		return employeeResponse;
 	}

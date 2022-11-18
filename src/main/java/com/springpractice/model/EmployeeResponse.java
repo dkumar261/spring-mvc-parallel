@@ -1,14 +1,14 @@
 package com.springpractice.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
 public class EmployeeResponse {
 
 	private EmployeeAddresses employeeAddresses;
+	private EmployeePhone employeePhone;
 
-	public EmployeeAddresses getEmployeeAddresses() {
-		return employeeAddresses;
-	}
-
-	public void setEmployeeAddresses(EmployeeAddresses employeeAddresses) {
-		this.employeeAddresses = employeeAddresses;
-	}
+	
 }

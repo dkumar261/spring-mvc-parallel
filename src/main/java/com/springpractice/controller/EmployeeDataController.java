@@ -3,8 +3,6 @@ package com.springpractice.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,11 +13,14 @@ import com.springpractice.model.EmployeeName;
 import com.springpractice.model.EmployeeNames;
 import com.springpractice.model.EmployeePhone;
 
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Data
 @RestController
 public class EmployeeDataController {
 
-	private static Logger log = LoggerFactory.getLogger(EmployeeDataController.class);
-	
 	@RequestMapping(value = "/address", method = RequestMethod.GET)
 	public EmployeeAddresses getAddresses() throws InterruptedException {
 		log.info("Employee addresses reached");
@@ -43,7 +44,10 @@ public class EmployeeDataController {
 		addressList.add(employeeAddress2);
 
 		employeeAddressesList.setEmployeeAddressList(addressList);
+		System.out.println("Waiting for Address to complete");
 		Thread.sleep(9000);
+		Thread.sleep(9000);
+		System.out.println("End of Address");
 		return employeeAddressesList;
 	}
 
@@ -58,6 +62,7 @@ public class EmployeeDataController {
 		phoneNumberList.add("200000");
 
 		employeePhone.setPhoneNumbers(phoneNumberList);
+		System.out.println("Waiting for phone to complete");
 		Thread.sleep(9000);
 		return employeePhone;
 	}
@@ -72,14 +77,10 @@ public class EmployeeDataController {
 		EmployeeName employeeName2 = new EmployeeName();
 
 		List<EmployeeName> employeeList = new ArrayList<EmployeeName>();
-		{
-			employeeName1.setFirstName("Santa");
-			employeeName1.setLastName("Singh");
-		}
-		{
-			employeeName2.setFirstName("Banta");
-			employeeName2.setLastName("Singh");
-		}
+		employeeName1.setFirstName("Santa");
+		employeeName1.setLastName("Singh");
+		employeeName2.setFirstName("Banta");
+		employeeName2.setLastName("Singh");
 
 		employeeList.add(employeeName1);
 		employeeList.add(employeeName2);
