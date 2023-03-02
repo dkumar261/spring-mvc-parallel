@@ -5,6 +5,7 @@ import java.util.concurrent.CompletableFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -20,37 +21,31 @@ public class EmployeeService {
 	@Autowired
 	private RestTemplate restTemplate;
 
+	@Async("asyncExecutor")
 	public CompletableFuture<EmployeeNames> getEmployeeName() throws InterruptedException {
-		return CompletableFuture.supplyAsync(() -> {
-			log.info("EmployeeName Rest Api call Starts");
-			EmployeeNames employeeNameData = restTemplate.getForObject("http://localhost:8001/names",
-					EmployeeNames.class);
+		log.info("getEmployeeName starts");
 
-			log.info("EmployeeName Rest Api call completed, {}", employeeNameData);
-			return employeeNameData;
-		});
+		EmployeeNames employeeNameData = restTemplate.getForObject("http://localhost:8080/name", EmployeeNames.class);
+
+		log.info("employeeNameData, {}", employeeNameData);
+		Thread.sleep(1000L); // Intentional delay
+		log.info("employeeNameData completed");
+		return CompletableFuture.completedFuture(employeeNameData);
 	}
 
+	@Async("asyncExecutor")
 	public CompletableFuture<EmployeeAddresses> getEmployeeAddress() throws InterruptedException {
-		return CompletableFuture.supplyAsync(() -> {
-
-			log.info("EmployeeAddress Rest Api call Starts");
-			EmployeeAddresses employeeAddressData = restTemplate.getForObject("http://localhost:8001/address",
-					EmployeeAddresses.class);
-			log.info("EmployeeAddress Rest Api call completed, {}", employeeAddressData);
-			return employeeAddressData;
-		});
+		log.info("getEmployeeAddress starts");
+		EmployeeAddresses employeeAddressData = restTemplate.getForObject("http://localhost:8080/address",
+				EmployeeAddresses.class);
+		return CompletableFuture.completedFuture(employeeAddressData);
 	}
 
+	@Async("asyncExecutor")
 	public CompletableFuture<EmployeePhone> getEmployeePhone() throws InterruptedException {
-		return CompletableFuture.supplyAsync(() -> {
-			log.info("EmployeePhone Rest Api call Starts");
-			EmployeePhone employeePhoneData = restTemplate.getForObject("http://localhost:8001/phones",
-					EmployeePhone.class);
-
-			log.info("EmployeePhone Rest Api call completed, {}", employeePhoneData);
-			return employeePhoneData;
-		});
+		log.info("getEmployeePhone starts");
+		EmployeePhone employeePhoneData = restTemplate.getForObject("http://localhost:8080/phones",
+				EmployeePhone.class);
+		return CompletableFuture.completedFuture(employeePhoneData);
 	}
-
 }
